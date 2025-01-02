@@ -38,7 +38,6 @@ export default function Index() {
         <Card className="relative group overflow-hidden rounded-lg md:w-1/2">
           <CardContent className="p-1">
             <video className="h-full w-full rounded-lg" autoPlay loop muted>
-              {/* <source src="assets/videos/demo.mp4" type="video/mp4"></source> */}
               <source src="assets/videos/landing-video.mp4" type="video/mp4"></source>
             </video>
           </CardContent>
