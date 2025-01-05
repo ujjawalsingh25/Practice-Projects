@@ -1,13 +1,19 @@
 import { useState } from "react";
-import { Link, Outlet } from "@remix-run/react";
+import { Link, Outlet, useOutletContext } from "@remix-run/react";
+import { Cross2Icon, HamburgerMenuIcon } from "@radix-ui/react-icons";
 
 import { Button } from "~/components/ui/button";
 import { AppLogo } from "~/components/app-logo";
+import { SupabaseOutletContext } from "~/lib/supabase";
 import { Avatar, AvatarImage } from "~/components/ui/avatar";
-import { Cross2Icon, HamburgerMenuIcon } from "@radix-ui/react-icons";
 
 export default function Home() {
     const [isNavOpen, setNavOpen] = useState(false);
+    const {supabase} = useOutletContext<SupabaseOutletContext>();
+
+    const handleSignOut = async() => {
+        await supabase.auth.signOut();
+    }
 
     return (
         <section className="w-full bg-white min-h-screen flex flex-col items-center">
@@ -35,7 +41,7 @@ export default function Home() {
                         src={"https://avatars.githubusercontent.com/u/128883851?v=4"}
                     ></AvatarImage>
                 </Avatar>
-                <Button>Logout</Button>
+                <Button onClick={handleSignOut}>Logout</Button>
             </div>
             </nav>
             <Outlet />

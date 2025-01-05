@@ -1,11 +1,36 @@
 import { Github } from "lucide-react";
-import { Link } from "@remix-run/react";
+import { LoaderFunctionArgs } from "@remix-run/node";
+import { json, Link, redirect, useOutletContext } from "@remix-run/react";
 
 import { AppLogo } from "~/components/app-logo";
 import { Button } from "~/components/ui/button";
+import { SupabaseOutletContext } from "~/lib/supabase";
 import { Card, CardContent } from "~/components/ui/card";
+import { getSupabaseWithSessionHeaders } from "~/lib/supabase.server";
+
+export let loader = async ({ request }: LoaderFunctionArgs) => {
+  const { headers, serverSession } = await getSupabaseWithSessionHeaders({
+    request,
+  });
+  if (serverSession) {
+    return redirect('/gitposts', { headers });
+  }
+  return json({ success: true }, { headers });
+};
 
 export default function Login() {
+  const {supabase, domainUrl} = useOutletContext<SupabaseOutletContext>(); 
+
+  const handleSignIn = async() => {
+    await supabase.auth.signInWithOAuth({
+      // provider: 'google',
+      provider: 'github',
+      options: {
+        redirectTo: `${domainUrl}/resources/auth/callback`
+      },
+    });
+  };
+
   return (
     <section className="w-full min-h-screen flex flex-col">
       <nav className="flex items-center justify-between p-4 w-full">
@@ -32,7 +57,7 @@ export default function Login() {
         </div>
         <Card className="relative group overflow-hidden rounded-lg">
           <CardContent className="p-1 bg-gradient-to-r from-orange-700 via-blue-500 to-green-400 bg-300% animate-gradient">
-            <Button onClick={() => console.log('login')}>
+            <Button onClick={handleSignIn}>
                 <Github className="mr-4 h-4 w-4" /> Github
             </Button>
           </CardContent>

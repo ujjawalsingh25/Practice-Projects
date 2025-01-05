@@ -1,14 +1,18 @@
 import {
+  json,
   Links,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from "@remix-run/react";
 import styles from "./tailwind.css?url"
-import type { LinksFunction } from "@remix-run/node";
+import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 
 import "./tailwind.css";
+import { useSupabase } from "./lib/supabase";
+import { getSupabaseEnv, getSupabaseWithSessionHeaders } from "./lib/supabase.server";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: styles },
@@ -24,7 +28,11 @@ export const links: LinksFunction = () => [
   },
 ];
 
+
 export function Layout({ children }: { children: React.ReactNode }) {
+  const { env, serverSession, doaminUrl } = useLoaderData<typeof loader>();
+  const { supabase } = useSupabase({ env, serverSession });
+
   return (
     <html lang="en">
       <head>
@@ -42,6 +50,21 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const { serverSession, headers } = await getSupabaseWithSessionHeaders({
+    request,
+  });
+  const env = getSupabaseEnv();
+  const doaminUrl = process.env.DOMAIN_URL;
+  return json(
+    {env, serverSession, doaminUrl},
+    { headers }
+  );
+};
+
 export default function App() {
-  return <Outlet />;
+  const { env, serverSession, doaminUrl } = useLoaderData<typeof loader>();
+  const { supabase } = useSupabase({ env, serverSession });
+  
+  return <Outlet context={{ supabase, doaminUrl }} />;
 }
