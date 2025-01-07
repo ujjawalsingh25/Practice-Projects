@@ -4,6 +4,7 @@ import ReactMarkdown from "react-markdown";
 import { Card } from "./ui/card";
 import { AppLogo } from "./app-logo";
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
+import { Skeleton } from "./ui/skeleton";
 
 export type PostProps = {
     avatarUrl: string;
@@ -70,4 +71,17 @@ export function Post({avatarUrl, name, username, title, dateTimeString,
             </Card>
         </div>
     );
-}
+};
+
+export function PostSkeleton() {
+    return (
+      <div className="flex space-x-4 min-h-[12rem] my-3 p-8">
+        <Skeleton className="h-12 w-12 rounded-full" />
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-[250px]" />
+          <Skeleton className="h-4 w-[200px]" />
+        </div>
+      </div>
+    );
+  }
+  

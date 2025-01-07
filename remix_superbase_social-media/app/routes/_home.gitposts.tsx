@@ -1,16 +1,14 @@
 import { LoaderFunctionArgs } from "@remix-run/node";
 import { json, Outlet, redirect, useLoaderData, useNavigation } from "@remix-run/react";
 
-import { Post } from "~/components/post";
-import { ViewLikes } from "~/components/view-likes";
 import { WritePost } from "~/components/write-post";
 import { Separator } from "@radix-ui/react-separator";
 import { PostSearch } from "~/components/post-search";
-import { ViewComments } from "~/components/view-comments";
 import { getAllPostsWithDetails } from "~/lib/database.server";
 import { getSupabaseWithSessionHeaders } from "~/lib/supabase.server";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { combinePostsWithLikes, formatToTwitterDate, getUserDataFromSession } from "~/lib/utils";
+import { InfiniteVirtualList } from "~/components/infinite-virtual-list";
 
 export const loader = async({ request }: LoaderFunctionArgs) => {  
     const { supabase, headers, serverSession } = await getSupabaseWithSessionHeaders({
@@ -25,8 +23,10 @@ export const loader = async({ request }: LoaderFunctionArgs) => {
     const query = searchParams.get("query");
     const page = Number(searchParams.get("page")) || 1;
 
-    const { data} = await getAllPostsWithDetails({
+    const { data, totalPages } = await getAllPostsWithDetails({
         dbClient: supabase,
+        page: isNaN(page) ? 1 : page,
+        searchQuery: query,
     });
 
     const {
@@ -37,14 +37,20 @@ export const loader = async({ request }: LoaderFunctionArgs) => {
     
     const posts = combinePostsWithLikes(data, sessionUserId);
   
-    return json({ query,  posts }, { headers });
+    return json(
+        { 
+            query,  
+            posts, 
+            totalPages, 
+            userDetails: {sessionUserId} 
+        }, 
+        { headers }
+    );
 };
 
 
 export default function GitPosts() {
-    const {query, posts} = useLoaderData<typeof loader>();
-    const post = posts[0];
-    console.log("posts: ", post);
+    const {query, posts, totalPages, userDetails: {sessionUserId} } = useLoaderData<typeof loader>();
     const navigation = useNavigation();
     // When nothing is happening, navigation.location will be undefined,
     // but when the user navigates it will be populated with the next
@@ -67,28 +73,10 @@ export default function GitPosts() {
                     {/* <Outlet /> */}
                     <Separator />
                     <PostSearch searchQuery={query} isSearching={isSearching} />
-                    <Post 
-                        avatarUrl={post.author.avatar_url}
-                        name={post.author.name}
-                        username={post.author.username}
-                        title={post.title}
-                        userId={post.author.id}
-                        id={post.id}
-                        dateTimeString={formatToTwitterDate(post.created_at)}
-                    >
-                        <ViewLikes 
-                            likes={post.likes} 
-                            likedByUser={post.isLikedByUser} 
-                            pathname={`/profile/ujjawalsingh25`} 
-                        /> 
-                        <ViewComments 
-                            comments={post.comments.length} 
-                            pathname={'`/profile/ujjawalsingh25`'} 
-                        /> 
-                    </Post>
+                    <InfiniteVirtualList incomingPosts={posts} totalPages={totalPages} />
                 </TabsContent>
                 <TabsContent value="write-post">
-                    <WritePost sessionUserId="123" postId="1234" />
+                    <WritePost sessionUserId={sessionUserId}/>
                 </TabsContent>
             </Tabs>
         </div>

@@ -26,3 +26,5 @@
 // npx supabase login        
 // npx supabase gen types typescript --project-id jrnxihojegrkbalvdcit > database.types.ts
 // npm i @supabase/supabase-js @supabase/ssr
+
+// npm i react-virtuoso
