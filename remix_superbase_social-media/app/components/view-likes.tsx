@@ -13,7 +13,7 @@ export function ViewLikes({ likes, likedByUser, pathname, readonly }: ViewLikesP
         <>
             <Link
                 to={pathname}
-                // preventScrollReset={true}
+                preventScrollReset={true}
                 className="flex justify-center items-center group"
             >
                 { likedByUser 

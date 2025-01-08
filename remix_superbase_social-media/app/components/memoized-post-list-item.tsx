@@ -1,9 +1,11 @@
-import { CombinedPostWithAuthorAndLikes } from "~/lib/types"
-import { Post } from "./post"
-import { formatToTwitterDate } from "~/lib/utils"
-import { memo } from "react"
-import { ViewLikes } from "./view-likes"
-import { ViewComments } from "./view-comments"
+import { memo } from "react";
+import { useLocation } from "@remix-run/react";
+
+import { Post } from "./post";
+import { ViewLikes } from "./view-likes";
+import { ViewComments } from "./view-comments";
+import { formatToTwitterDate } from "~/lib/utils";
+import { CombinedPostWithAuthorAndLikes } from "~/lib/types";
 
 type MemoizedPostListItemProps = {
     post: CombinedPostWithAuthorAndLikes, 
@@ -11,6 +13,15 @@ type MemoizedPostListItemProps = {
 }
 
 export const MemoizedPostListItem = memo(({post, index}: MemoizedPostListItemProps) => {
+    const location = useLocation();
+    let pathnameWithSearchQuery = "";
+
+    if (location.search) {
+      pathnameWithSearchQuery = `${location.pathname}/${post.id}${location.search}`;
+    } else {
+      pathnameWithSearchQuery = `${location.pathname}/${post.id}`;
+    }
+
     return (
        <Post 
             avatarUrl={post.author.avatar_url}
@@ -24,11 +35,11 @@ export const MemoizedPostListItem = memo(({post, index}: MemoizedPostListItemPro
             <ViewLikes 
                 likes={post.likes} 
                 likedByUser={post.isLikedByUser} 
-                pathname={`/profile/ujjawalsingh25`} 
+                pathname={pathnameWithSearchQuery} 
             /> 
             <ViewComments 
                 comments={post.comments.length} 
-                pathname={'`/profile/ujjawalsingh25`'} 
+                pathname={pathnameWithSearchQuery} 
             /> 
         </Post>
     );

@@ -2,7 +2,7 @@ import { twMerge } from "tailwind-merge"
 import { clsx, type ClassValue } from "clsx"
 import { Session } from "@supabase/supabase-js";
 
-import { PostWithDetails } from "./types";
+import { PostWithCommentDetails, PostWithDetails } from "./types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -31,6 +31,36 @@ export function combinePostsWithLikes(
         likes: post.likes.length,
         comments: post.comments,
         author: post.author!, // cannot be null
+      };
+    }) ?? [];
+
+  return posts;
+}
+
+
+export function combinePostsWithLikesAndComments(
+  data: PostWithCommentDetails[] | null,
+  sessionUserId: string
+) {
+  const posts =
+    data?.map((post) => {
+      // Map each comment to rename avatar_url to avatarUrl
+      const commentsWithAvatarUrl = post.comments.map((comment) => ({
+        ...comment,
+        author: {
+          username: comment.author!.username,
+          avatarUrl: comment.author!.avatar_url,
+        },
+      }));
+
+      return {
+        ...post,
+        isLikedByUser: !!post.likes.find(
+          (like) => like.user_id === sessionUserId
+        ),
+        likes: post.likes.length,
+        comments: commentsWithAvatarUrl, // Use the transformed comments
+        author: post.author!, // author is guaranteed
       };
     }) ?? [];
 

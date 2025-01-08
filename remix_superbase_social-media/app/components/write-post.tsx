@@ -1,26 +1,32 @@
+import { useFetcher } from "@remix-run/react";
+import { UpdateIcon } from "@radix-ui/react-icons";
 import { useEffect, useRef, useState } from "react";
 
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card";
-import { useFetcher } from "@remix-run/react";
-import { UpdateIcon } from "@radix-ui/react-icons";
 
 type WritePostProps = {
     sessionUserId: string;
+    postId?: string;
 };
 
-export function WritePost({ sessionUserId }: WritePostProps) {
+export function WritePost({ sessionUserId, postId }: WritePostProps) {
     const [title, setTitle] = useState("");
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
     const fetcher = useFetcher();
     const isPosting = fetcher.state !== 'idle';
     const isDisabled = isPosting || !title;
-    const postActionUrl = "/resources/post";
+    const isComment = Boolean(postId);
+    const postActionUrl = isComment ? "/resources/comment" : "/resources/post";
 
     const postTitle = () => {
-        const formData = {title, userId: sessionUserId};
+        const formData = {
+            title, 
+            userId: sessionUserId,
+            ...(isComment ? {postId} : {})
+        };
         fetcher.submit(formData, {
             method: "POST",
             action: postActionUrl
@@ -39,6 +45,26 @@ export function WritePost({ sessionUserId }: WritePostProps) {
           textareaRef.current.style.height = `${height}px`;
         }
     }, [title]);
+
+    if (isComment) {
+        return (
+            <Card className="mb-4">
+                <CardContent className="p-4 text-right">
+                    <Textarea
+                        placeholder="Type your comment here"
+                        value={title}
+                        ref={textareaRef}
+                        onChange={(e) => setTitle(e.target.value)}
+                        className="mb-2"
+                    />
+                    <Button disabled={isDisabled} onClick={postTitle}>
+                        {isPosting && <UpdateIcon className="mr-2 h-4 w-4 animate-spin" />}
+                        {isPosting ? "Commenting" : "Comment"}
+                    </Button>
+                </CardContent>
+            </Card>
+        );
+    }
 
     return (
         <Card>

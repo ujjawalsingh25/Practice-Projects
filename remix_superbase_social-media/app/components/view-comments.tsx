@@ -19,6 +19,7 @@ export function ViewComments({ comments, pathname, readonly}: ViewCommentsProps)
             ) : (
                 <Link
                     to={pathname}
+                    preventScrollReset={true}
                     className="flex justify-center items-center group"
                 >
                   <MessageCircle className="h-4 w-4 text-muted-foreground group-hover:text-green-400" />

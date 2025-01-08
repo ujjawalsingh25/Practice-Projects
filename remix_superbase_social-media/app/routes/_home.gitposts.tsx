@@ -6,9 +6,9 @@ import { Separator } from "@radix-ui/react-separator";
 import { PostSearch } from "~/components/post-search";
 import { getAllPostsWithDetails } from "~/lib/database.server";
 import { getSupabaseWithSessionHeaders } from "~/lib/supabase.server";
+import { InfiniteVirtualList } from "~/components/infinite-virtual-list";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { combinePostsWithLikes, formatToTwitterDate, getUserDataFromSession } from "~/lib/utils";
-import { InfiniteVirtualList } from "~/components/infinite-virtual-list";
 
 export const loader = async({ request }: LoaderFunctionArgs) => {  
     const { supabase, headers, serverSession } = await getSupabaseWithSessionHeaders({
@@ -64,6 +64,7 @@ export default function GitPosts() {
     
     return (
         <div className="w-full max-w-xl px-4 flex flex-col">
+            <Outlet />
             <Tabs defaultValue="view-posts" className="my-2">
                 <TabsList className="grid w-full grid-cols-2">
                     <TabsTrigger value="view-posts">View Posts</TabsTrigger>
