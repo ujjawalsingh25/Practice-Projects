@@ -8,10 +8,14 @@ import { AppLogo } from "./app-logo";
 type InfiniteVirtualListProps = {
     totalPages: number;
     incomingPosts: CombinedPostsWithAuthorAndLikes;
+    isProfile?: boolean;
 }
 
-export function InfiniteVirtualList({totalPages, incomingPosts}: InfiniteVirtualListProps) {
-    const {posts, hasMorePages, loadMore} = useInfinitePosts({incomingPosts, totalPages});
+export function InfiniteVirtualList({totalPages, incomingPosts, isProfile}: InfiniteVirtualListProps) {
+    const postRouteId = isProfile
+    ? "routes/_home.profile.$username.$postId"
+    : "routes/_home.gitposts.$postId";
+    const {posts, hasMorePages, loadMore} = useInfinitePosts({incomingPosts, totalPages, postRouteId});
     if(!posts.length) {
         return <div className="flex items-center justify-center h-[50vh] ">
             <AppLogo className="h-10 w-10"></AppLogo>

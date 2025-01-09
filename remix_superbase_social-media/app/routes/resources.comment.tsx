@@ -13,6 +13,9 @@ export async function action({ request }: ActionFunctionArgs) {
     const postId = formData.get("postId")?.toString();
     const userId = formData.get("userId")?.toString();
 
+    // A skipRevalidation of the routes you want during this action
+    const skipRevalidation = ["/gitposts", "/profile.$username"];
+
     if (!userId || !postId || !title) {
       return json(
         { error: "User or Tweet Id missing"},
@@ -23,8 +26,8 @@ export async function action({ request }: ActionFunctionArgs) {
     const { error } = await insertComment({dbClient: supabase, userId, postId, title});
     
     if (error) { 
-        return json( { error: "Failed to comment"}, { status: 500, headers })
+        return json( { error: "Failed to comment", skipRevalidation}, { status: 500, headers })
     }
   
-    return json({ ok: true, error: null}, { headers });
+    return json({ ok: true, error: null, skipRevalidation}, { headers });
 }

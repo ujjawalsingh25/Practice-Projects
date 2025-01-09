@@ -1,6 +1,6 @@
 import { json, redirect } from "@remix-run/node";
 import { type LoaderFunctionArgs } from "@remix-run/node";
-import { Link, Outlet, useLoaderData } from "@remix-run/react";
+import { Link, Outlet, ShouldRevalidateFunctionArgs, useLoaderData } from "@remix-run/react";
 
 import { Separator } from "~/components/ui/separator";
 import { Avatar, AvatarImage } from "~/components/ui/avatar";
@@ -88,8 +88,22 @@ export default function Profile() {
             <br />
             <h2 className="text-xl font-heading font-semibold">{"User posts"}</h2>
             <br />
-            <InfiniteVirtualList incomingPosts={posts} totalPages={totalPages} />
+            <InfiniteVirtualList incomingPosts={posts} totalPages={totalPages} isProfile={true} />
         </div>
     );
 }
 
+  
+export function shouldRevalidate({ actionResult, defaultShouldRevalidate}: ShouldRevalidateFunctionArgs) {
+    const skipRevalidation =
+      actionResult?.skipRevalidation &&
+      actionResult?.skipRevalidation?.includes("/profile.$username");
+  
+    if (skipRevalidation) {
+      console.log("Skipped revalidation");
+      return false;
+    }
+  
+    console.log("Did not skip revalidation");
+    return defaultShouldRevalidate;
+}

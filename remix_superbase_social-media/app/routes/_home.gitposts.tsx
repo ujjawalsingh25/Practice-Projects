@@ -1,5 +1,5 @@
 import { LoaderFunctionArgs } from "@remix-run/node";
-import { json, Outlet, redirect, useLoaderData, useNavigation } from "@remix-run/react";
+import { json, Outlet, redirect, ShouldRevalidateFunctionArgs, useLoaderData, useNavigation } from "@remix-run/react";
 
 import { WritePost } from "~/components/write-post";
 import { Separator } from "@radix-ui/react-separator";
@@ -71,7 +71,7 @@ export default function GitPosts() {
                     <TabsTrigger value="write-post">Write Post</TabsTrigger>
                 </TabsList>
                 <TabsContent value="view-posts"> 
-                    {/* <Outlet /> */}
+                    <Outlet />
                     <Separator />
                     <PostSearch searchQuery={query} isSearching={isSearching} />
                     <InfiniteVirtualList incomingPosts={posts} totalPages={totalPages} />
@@ -82,4 +82,19 @@ export default function GitPosts() {
             </Tabs>
         </div>
     );
-  }
+}
+
+  
+export function shouldRevalidate({ actionResult, defaultShouldRevalidate}: ShouldRevalidateFunctionArgs) {
+    const skipRevalidation =
+      actionResult?.skipRevalidation &&
+      actionResult?.skipRevalidation?.includes("/gitposts");
+  
+    if (skipRevalidation) {
+      console.log("Skipped revalidation");
+      return false;
+    }
+  
+    console.log("Did not skip revalidation");
+    return defaultShouldRevalidate;
+}

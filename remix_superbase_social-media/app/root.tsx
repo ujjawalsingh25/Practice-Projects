@@ -13,6 +13,7 @@ import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 import "./tailwind.css";
 import { useSupabase } from "./lib/supabase";
 import { getSupabaseEnv, getSupabaseWithSessionHeaders } from "./lib/supabase.server";
+import { Toaster } from "./components/ui/toaster";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: styles },
@@ -41,7 +42,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body>
+      <body className="overscroll-none">
+        <Toaster />
         {children}
         <ScrollRestoration />
         <Scripts />
