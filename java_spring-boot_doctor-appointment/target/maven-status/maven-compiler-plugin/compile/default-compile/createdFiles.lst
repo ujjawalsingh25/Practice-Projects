@@ -1,0 +1,16 @@
+com\hm\HospitalManagement\controller\AdminController.class
+com\hm\HospitalManagement\Service\DoctorLoginService.class
+com\hm\HospitalManagement\Repository\AdminRepository.class
+com\hm\HospitalManagement\Entity\Patient.class
+com\hm\HospitalManagement\controller\DoctorAdminController.class
+com\hm\HospitalManagement\Repository\DoctorLoginRepository.class
+com\hm\HospitalManagement\controller\PatientController.class
+com\hm\HospitalManagement\Entity\Admin.class
+com\hm\HospitalManagement\Service\PatientService.class
+com\hm\HospitalManagement\Repository\PatientRepository.class
+com\hm\HospitalManagement\Service\DoctorService.class
+com\hm\HospitalManagement\controller\DoctorLoginController.class
+com\hm\HospitalManagement\Entity\Doctor.class
+com\hm\HospitalManagement\Service\AdminService.class
+com\hm\HospitalManagement\HospitalManagementApplication.class
+com\hm\HospitalManagement\Repository\DoctorRepository.class

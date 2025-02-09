@@ -1,0 +1,115 @@
+<!-- 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles/dashboard.css">
+</head>
+<body>
+    <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-success"> 
+        <div class="container">
+            <a class="navbar-brand text-light d-flex align-items-center" href="#">
+               <span class="fs-2"> Pulse Point Hospital</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto"> 
+                    <li class="nav-item"><a class="btn btn-outline-light" href="index.html"><span class="fs-5"></span>Logout</a></span></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="container py-5">
+        <h3>Doctor Dashboard</h3>
+        <p>Today Appointments:  </p>
+        <table class="table table-success table-striped">
+            <thead>
+                <tr>
+                  <th scope="col">Sl. No.</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Age</th>
+                  <th scope="col">Blood Group</th>
+                  <th scope="col">Problem</th>
+                  <th scope="col">Reject Request </th>
+                  <th scope="col">Approve Request</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">1</th>
+                  <td>Mark</td>
+                  <td>Otto</td>
+                  <td>@mdo</td>
+                  <td>@mdo</td>
+                  <th scope="col"><button class="btn btn-danger">Cancel Appointment</button></th>
+                  <th scope="col"><button class="btn btn-success">Approve Appointment</button></th>
+                </tr>
+                <tr>
+                  <th scope="row">2</th>
+                  <td>Mark</td>
+                  <td>Otto</td>
+                  <td>@mdo</td>
+                  <td>@mdo</td>
+                  <th scope="col"><button class="btn btn-danger">Cancel Appointment</button></th>
+                  <th scope="col"><button class="btn btn-success">Approve Appointment</button></th>
+                </tr>
+                <tr>
+                  <th scope="row">3</th>
+                  <td>Mark</td>
+                  <td>Otto</td>
+                  <td>@mdo</td>
+                  <td>@mdo</td>
+                  <th scope="col"><button class="btn btn-danger">Cancel Appointment</button></th>
+                  <th scope="col"><button class="btn btn-success">Approve Appointment</button></th>
+                </tr>
+              </tbody>
+          </table>
+        
+        
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+ -->
+ 
+ 
+ 
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-success">
+        <div class="container">
+            <a class="navbar-brand text-light" href="#">Doctor Dashboard</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="btn btn-outline-light" href="/doctor/logout">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <h3 class="text-center" th:text="${doctorMessage}"></h3>
+    </div>
+
+     <!-- Display Patient Names -->
+    <h4 class="mt-4">Patients Booked:</h4>
+    <ul class="list-group">
+        <li class="list-group-item" th:each="patient : ${patientDetails}" th:text="${patient.name}"></li>
+    </ul>
+</body>
+</html>
+ 

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <h2 class="text-center" th:text="${patientMessage}"></h2>
+        
+        <h2>Available Doctors:</h2>
+        <ul>
+            <c:forEach var="doctor" items="${doctors}">
+                <!-- <li th:each="doctor : ${doctors}">
+                    Dr. <span th:text="${doctor.name}"></span> - 
+                    <span th:text="${doctor.specialization}"></span> -
+                    <span>
+                        <button type="submit" class="btn btn-primary w-100">Book</button>
+                    </span>
+                </li> -->
+                <!-- Add form submission for booking, including doctor email -->
+                <!-- <form action="/patient/book" method="post">
+                    <input type="hidden" name="doctorEmail" th:value="${doctor.email}"> 
+                    <li th:each="doctor : ${doctors}">
+                        Dr. <span th:text="${doctor.name}"></span> - 
+                        <span th:text="${doctor.specialization}"></span> -
+                        <span>
+                            <button type="submit" class="btn btn-primary w-100">Book</button>
+                        </span>
+                    </li>
+                </form> -->
+                <ul>
+                    <li th:each="doctor : ${doctors}">
+                        Dr. <span th:text="${doctor.name}"></span> - 
+                        <span th:text="${doctor.specialization}"></span> -
+                        <form action="/patient/book" method="post" style="display: inline;">
+                            <input type="hidden" name="doctorEmail" th:value="${doctor.email}"> 
+                            <button type="submit" class="btn btn-primary">Book</button>
+                        </form>
+                    </li>
+                </ul>
+            </c:forEach>
+        </ul>
+        <div class="text-center mt-4">
+            <a href="/patient/logout" class="btn btn-danger">Logout</a>
+        </div>
+    </div>
+</body>
+</html>
